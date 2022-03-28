@@ -8,8 +8,7 @@ set(MAIN_FILE
 )
 	
 set(SRC_FILES
-	src/*.cpp
-	src/*.cpp
+	src/aes.cpp
 )
 
 #set(TEST_FILES
