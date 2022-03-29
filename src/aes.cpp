@@ -26,11 +26,38 @@ std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> k
         }
     }
 
+    addRoundKey_(state, key);
+
     for (std::size_t i = 0; i < 4; ++i)
     {
         delete [] state[i];
     }
     delete [] state;
 
-    return key; // FAKE RETURN
+    return state2vec_(state);
+}
+
+void AES::addRoundKey_(uint8_t **state, std::vector<uint8_t> key)
+{
+    for (std::size_t r = 0; r < 4; ++r)
+    {
+        for (std::size_t c = 0; c < Nb; ++c)
+        {
+            state[r][c] ^= key[r + 4 * c];
+        }
+    }
+}
+
+std::vector<uint8_t> AES::state2vec_(uint8_t **state)
+{
+    std::vector<uint8_t> out;
+    for (std::size_t c = 0; c < Nb; ++c)
+    {
+        for (std::size_t r = 0; r < 4; ++r)
+        {
+            out.push_back(state[r][c]);
+        }
+    }
+
+    return out;
 }

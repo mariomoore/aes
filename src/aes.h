@@ -15,4 +15,7 @@ private:
     const uint32_t Nb = 4;  // Number of columns
     uint32_t Nk;            // Number of 32-bit words comprising the Cipher Key
     uint32_t Nr;            // Number of rounds
+
+    void addRoundKey_(uint8_t **state, std::vector<uint8_t> key);
+    std::vector<uint8_t> state2vec_(uint8_t **state);
 };
