@@ -1,8 +1,6 @@
 #include "aes.h"
 
 #include <cstddef> // size_t
-#include <iostream>
-#include <string>
 
 AES::AES(CipherKey_t ck)
 {
@@ -28,13 +26,15 @@ std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> k
 
     addRoundKey_(state, key);
 
+    std::vector<uint8_t> out = state2vec_(state);
+
     for (std::size_t i = 0; i < 4; ++i)
     {
         delete [] state[i];
     }
     delete [] state;
 
-    return state2vec_(state);
+    return out;
 }
 
 void AES::addRoundKey_(uint8_t **state, std::vector<uint8_t> key)
