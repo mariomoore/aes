@@ -6,16 +6,24 @@ AES::AES(CipherKey_t ck)
 {
     Nk = ck;
     Nr = 6 + ck;
-}
-
-std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> key)
-{
-    uint8_t **state = new uint8_t*[4];
+    state = new uint8_t*[4];
     for (std::size_t i = 0; i < 4; ++i)
     {
         state[i] = new uint8_t[Nb];
     }
+}
 
+AES::~AES()
+{
+    for (std::size_t i = 0; i < 4; ++i)
+    {
+        delete [] state[i];
+    }
+    delete [] state;
+}
+
+std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> key)
+{
     for (std::size_t r = 0; r < 4; ++r)
     {
         for (std::size_t c = 0; c < Nb; ++c)
@@ -24,20 +32,12 @@ std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> k
         }
     }
 
-    addRoundKey_(state, key);
+    addRoundKey_(key);
 
-    std::vector<uint8_t> out = state2vec_(state);
-
-    for (std::size_t i = 0; i < 4; ++i)
-    {
-        delete [] state[i];
-    }
-    delete [] state;
-
-    return out;
+    return state2vec_();
 }
 
-void AES::addRoundKey_(uint8_t **state, std::vector<uint8_t> key)
+void AES::addRoundKey_(std::vector<uint8_t> key)
 {
     for (std::size_t r = 0; r < 4; ++r)
     {
@@ -48,7 +48,7 @@ void AES::addRoundKey_(uint8_t **state, std::vector<uint8_t> key)
     }
 }
 
-std::vector<uint8_t> AES::state2vec_(uint8_t **state)
+std::vector<uint8_t> AES::state2vec_()
 {
     std::vector<uint8_t> out;
     for (std::size_t c = 0; c < Nb; ++c)

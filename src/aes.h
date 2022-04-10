@@ -9,13 +9,15 @@ class AES
 {
 public:
     AES(CipherKey_t ck);
+    ~AES();
     std::vector<uint8_t> cipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
     std::vector<uint8_t> invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
 private:
     const uint32_t Nb = 4;  // Number of columns
     uint32_t Nk;            // Number of 32-bit words comprising the Cipher Key
     uint32_t Nr;            // Number of rounds
+    uint8_t **state;
 
-    void addRoundKey_(uint8_t **state, std::vector<uint8_t> key);
-    std::vector<uint8_t> state2vec_(uint8_t **state);
+    void addRoundKey_(std::vector<uint8_t> key);
+    std::vector<uint8_t> state2vec_();
 };
