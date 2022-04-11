@@ -13,6 +13,7 @@ set(SRC_FILES
 
 set(TEST_FILES
 	test/test.cpp
+	test/aestest.cpp
 )
 
 set(CMAKE_CXX_STANDARD 17)
