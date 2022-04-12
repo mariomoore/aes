@@ -48,6 +48,17 @@ void AES::addRoundKey_(std::vector<uint8_t> key)
     }
 }
 
+void AES::subBytes_()
+{
+    for (std::size_t r = 0; r < 4; ++r)
+    {
+        for (std::size_t c = 0; c < Nb; ++c)
+        {
+            state[r][c] = sbox[state[r][c]];
+        }
+    }
+}
+
 std::vector<uint8_t> AES::state2vec_()
 {
     std::vector<uint8_t> out;
