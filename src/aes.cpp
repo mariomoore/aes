@@ -59,6 +59,22 @@ void AES::subBytes_()
     }
 }
 
+void AES::shiftRows_()
+{
+    for (std::size_t r = 1; r < 4; ++r)
+    {
+        for (std::size_t sshf = 1; sshf <= r; ++sshf)
+        {
+            uint8_t tmp = state[r][0];
+            for ( std::size_t c = 0; c < Nb - 1; ++c)
+            {
+                state[r][c] = state[r][c + 1];
+            }
+            state[r][Nb - 1] = tmp;
+        }
+    }
+}
+
 std::vector<uint8_t> AES::state2vec_()
 {
     std::vector<uint8_t> out;

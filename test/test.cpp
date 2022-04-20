@@ -123,6 +123,34 @@ void test_aes_subBytes_should_transformState(void)
     TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
 }
 
+void test_aes_shiftRows_should_shiftRows(void)
+{
+    AESTest aestest(AES_128);
+    std::vector<uint8_t> inp = { 0x3b, 0x59, 0xcb, 0x73, 0xfc, 0xd9, 0x0e, 0xe0, 0x57, 0x74, 0x22, 0x2d, 0xc0, 0x67, 0xfb, 0x68 }; // round[ 3].s_box
+    std::vector<uint8_t> exp = { 0x3b, 0xd9, 0x22, 0x68, 0xfc, 0x74, 0xfb, 0x73, 0x57, 0x67, 0xcb, 0xe0, 0xc0, 0x59, 0x0e, 0x2d }; // round[ 3].s_row
+    aestest.setState(inp);
+
+    aestest.shiftRows();
+    std::vector<uint8_t> out = aestest.state2vec();
+
+    TEST_ASSERT_EQUAL_HEX8(exp[0], out[0]);
+    TEST_ASSERT_EQUAL_HEX8(exp[1], out[1]);
+    TEST_ASSERT_EQUAL_HEX8(exp[2], out[2]);
+    TEST_ASSERT_EQUAL_HEX8(exp[3], out[3]);
+    TEST_ASSERT_EQUAL_HEX8(exp[4], out[4]);
+    TEST_ASSERT_EQUAL_HEX8(exp[5], out[5]);
+    TEST_ASSERT_EQUAL_HEX8(exp[6], out[6]);
+    TEST_ASSERT_EQUAL_HEX8(exp[7], out[7]);
+    TEST_ASSERT_EQUAL_HEX8(exp[8], out[8]);
+    TEST_ASSERT_EQUAL_HEX8(exp[9], out[9]);
+    TEST_ASSERT_EQUAL_HEX8(exp[10], out[10]);
+    TEST_ASSERT_EQUAL_HEX8(exp[11], out[11]);
+    TEST_ASSERT_EQUAL_HEX8(exp[12], out[12]);
+    TEST_ASSERT_EQUAL_HEX8(exp[13], out[13]);
+    TEST_ASSERT_EQUAL_HEX8(exp[14], out[14]);
+    TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
+}
+
 void test_aes_cipher_should_cipherMessage(void)
 {
     AES aes(AES_128);
@@ -157,6 +185,7 @@ int main(void)
     RUN_TEST(test_aes_state2vec_should_returnInput);
     RUN_TEST(test_aes_addRoundKey_should_addKeyToState);
     RUN_TEST(test_aes_subBytes_should_transformState);
+    RUN_TEST(test_aes_shiftRows_should_shiftRows);
     RUN_TEST(test_aes_cipher_should_cipherMessage);
     return UNITY_END();
 }

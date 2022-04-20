@@ -43,5 +43,6 @@ protected:
     uint8_t **state;
     void addRoundKey_(std::vector<uint8_t> key);
     void subBytes_();
+    void shiftRows_();
     std::vector<uint8_t> state2vec_();
 };

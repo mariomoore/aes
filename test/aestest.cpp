@@ -17,6 +17,11 @@ void AESTest::subBytes()
     subBytes_();
 }
 
+void AESTest::shiftRows()
+{
+    shiftRows_();
+}
+
 void AESTest::setState(std::vector<uint8_t> inp)
 {
     for (std::size_t r = 0; r < 4; ++r)

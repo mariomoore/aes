@@ -9,6 +9,7 @@ public:
 // Tested
     void addRoundKey(std::vector<uint8_t> key);
     void subBytes();
+    void shiftRows();
 // Help
     void setState(std::vector<uint8_t> inp);
     std::vector<uint8_t> state2vec();

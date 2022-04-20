@@ -4,7 +4,7 @@
 
 int main()
 {
-    setlocale(LC_ALL, "polish");
+    // setlocale(LC_ALL, "polish");
 
     std::cout << "Aplikacja pokazowa modułu AES" << std::endl;
 
