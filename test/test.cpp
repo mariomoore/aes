@@ -151,6 +151,35 @@ void test_aes_shiftRows_should_shiftRows(void)
     TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
 }
 
+void test_aes_mixColumns_should_mixColumns(void)
+{
+    AESTest aestest(AES_128);
+
+    std::vector<uint8_t> inp = { 0x2d, 0x6d, 0x7e, 0xf0, 0x3f, 0x33, 0xe3, 0x34, 0x09, 0x36, 0x02, 0xdd, 0x5b, 0xfb, 0x12, 0xc7 }; // round[ 4].s_row
+    std::vector<uint8_t> exp = { 0x63, 0x85, 0xb7, 0x9f, 0xfc, 0x53, 0x8d, 0xf9, 0x97, 0xbe, 0x47, 0x8e, 0x75, 0x47, 0xd6, 0x91 }; // round[ 4].m_col
+    aestest.setState(inp);
+
+    aestest.mixColumns();
+    std::vector<uint8_t> out = aestest.state2vec();
+
+    TEST_ASSERT_EQUAL_HEX8(exp[0], out[0]);
+    TEST_ASSERT_EQUAL_HEX8(exp[1], out[1]);
+    TEST_ASSERT_EQUAL_HEX8(exp[2], out[2]);
+    TEST_ASSERT_EQUAL_HEX8(exp[3], out[3]);
+    TEST_ASSERT_EQUAL_HEX8(exp[4], out[4]);
+    TEST_ASSERT_EQUAL_HEX8(exp[5], out[5]);
+    TEST_ASSERT_EQUAL_HEX8(exp[6], out[6]);
+    TEST_ASSERT_EQUAL_HEX8(exp[7], out[7]);
+    TEST_ASSERT_EQUAL_HEX8(exp[8], out[8]);
+    TEST_ASSERT_EQUAL_HEX8(exp[9], out[9]);
+    TEST_ASSERT_EQUAL_HEX8(exp[10], out[10]);
+    TEST_ASSERT_EQUAL_HEX8(exp[11], out[11]);
+    TEST_ASSERT_EQUAL_HEX8(exp[12], out[12]);
+    TEST_ASSERT_EQUAL_HEX8(exp[13], out[13]);
+    TEST_ASSERT_EQUAL_HEX8(exp[14], out[14]);
+    TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
+}
+
 void test_aes_cipher_should_cipherMessage(void)
 {
     AES aes(AES_128);
@@ -186,6 +215,7 @@ int main(void)
     RUN_TEST(test_aes_addRoundKey_should_addKeyToState);
     RUN_TEST(test_aes_subBytes_should_transformState);
     RUN_TEST(test_aes_shiftRows_should_shiftRows);
+    RUN_TEST(test_aes_mixColumns_should_mixColumns);
     RUN_TEST(test_aes_cipher_should_cipherMessage);
     return UNITY_END();
 }

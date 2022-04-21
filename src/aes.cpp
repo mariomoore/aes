@@ -75,6 +75,30 @@ void AES::shiftRows_()
     }
 }
 
+void AES::mixColumns_()
+{
+    for (std::size_t c = 0; c < Nb; ++c)
+    {
+        uint8_t tmp_col[4] = {};
+        for (std::size_t r = 0; r < 4; ++r)
+        {
+            for (std::size_t i = 0; i < 4; ++i)
+            {
+                switch(mixcoeff[r][i])
+                {
+                    case 1: tmp_col[r] ^= state[i][c]; break;
+                    case 2: tmp_col[r] ^= multiply2[state[i][c]]; break;
+                    case 3: tmp_col[r] ^= multiply3[state[i][c]]; break;
+                }
+            }
+        }
+        for (std::size_t r = 0; r < 4; ++r)
+        {
+            state[r][c] = tmp_col[r];
+        }
+    }
+}
+
 std::vector<uint8_t> AES::state2vec_()
 {
     std::vector<uint8_t> out;
