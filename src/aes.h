@@ -80,6 +80,7 @@ public:
     ~AES();
     std::vector<uint8_t> cipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
     std::vector<uint8_t> invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
+    void printState() const;
 
 private:
     const uint32_t Nb = 4;  // Number of columns

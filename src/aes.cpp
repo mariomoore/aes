@@ -1,6 +1,10 @@
 #include "aes.h"
 
 #include <cstddef> // size_t
+#include <iomanip> // hex, setw, setfill
+#include <iostream>
+#include <sstream>
+#include <string>
 
 AES::AES(CipherKey_t ck)
 {
@@ -35,6 +39,21 @@ std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> k
     addRoundKey_(key);
 
     return state2vec_();
+}
+
+void AES::printState() const
+{
+    std::stringstream sstr;
+    std::string str = "";
+    for (std::size_t c = 0; c < Nb; ++c)
+    {
+        for (std::size_t r = 0; r < 4; ++r)
+        {
+            sstr << std::setw(2) << std::setfill ('0') << std::hex << (int)state[r][c];
+        }
+    }
+    str = sstr.str();
+    std::cout << str << std::endl;
 }
 
 void AES::addRoundKey_(std::vector<uint8_t> key)
