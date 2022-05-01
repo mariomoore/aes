@@ -25,6 +25,8 @@ static const uint8_t sbox[] =
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 };
 
+static const uint8_t rcon[] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36 };
+
 static const uint8_t mixcoeff[4][4] =
 {
     { 2, 3, 1, 1 },
@@ -80,7 +82,7 @@ public:
     ~AES();
     std::vector<uint8_t> cipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
     std::vector<uint8_t> invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
-    void printState() const;
+    void printState4debug() const;
 
 private:
     const uint32_t Nb = 4;  // Number of columns
@@ -90,7 +92,11 @@ private:
 // protected declarations that are used in tests
 protected:
     uint8_t **state;
-    void addRoundKey_(std::vector<uint8_t> key);
+    uint8_t *keySchedule;
+    void keyExpansion_(std::vector<uint8_t> key);
+    void rotWord_(uint8_t *w);
+    void subWord_(uint8_t *w);
+    void addRoundKey_(uint8_t *key);
     void subBytes_();
     void shiftRows_();
     void mixColumns_();
