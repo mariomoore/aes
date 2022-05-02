@@ -100,14 +100,14 @@ void AES::keyExpansion_(std::vector<uint8_t> key)
         temp[1] = keySchedule[i - 3];
         temp[2] = keySchedule[i - 2];
         temp[3] = keySchedule[i - 1];
-
+        
         if (i % (Nk * 4) == 0)
         {
             rotWord_(temp);
             subWord_(temp);
             temp[0] ^= rcon[i/(Nk * 4) - 1];
         }
-        else if ((Nk > 6) && (i % Nk == 4))
+        else if ((Nk > 6) && (i % (Nk * 4) == 16))
         {
             subWord_(temp);
         }

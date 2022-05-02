@@ -4,7 +4,8 @@
 
 AESTest::AESTest(CipherKey_t ck) : AES(ck)
 {
-
+    Nk = ck;
+    Nr = 6 + ck;
 }
 
 void AESTest::rotWord(uint8_t *w)
@@ -60,8 +61,6 @@ std::vector<uint8_t> AESTest::state2vec()
 
 std::vector<uint8_t> AESTest::keySchedule2vec()
 {
-    uint8_t Nb = 4;
-    uint8_t Nr = 10;
     std::vector<uint8_t> out;
     for (std::size_t i = 0; i < (4 * Nb * (Nr + 1)); ++i)
     {
