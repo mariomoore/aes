@@ -175,6 +175,22 @@ void AES::shiftRows_()
     }
 }
 
+void AES::invShiftRows_()
+{
+    for (std::size_t r = 1; r < 4; ++r)
+    {
+        for (std::size_t sshf = 1; sshf <= r; ++sshf)
+        {
+            uint8_t tmp = state[r][Nb - 1];
+            for (std::size_t c = Nb - 1; c > 0; --c)
+            {
+                state[r][c] = state[r][c - 1];
+            }
+            state[r][0] = tmp;
+        }
+    }
+}
+
 void AES::mixColumns_()
 {
     for (std::size_t c = 0; c < Nb; ++c)

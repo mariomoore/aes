@@ -13,6 +13,7 @@ public:
     void addRoundKey(uint8_t *key);
     void subBytes();
     void shiftRows();
+    void invShiftRows();
     void mixColumns();
 // Help
     void setState(std::vector<uint8_t> inp);

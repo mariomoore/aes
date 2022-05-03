@@ -38,6 +38,11 @@ void AESTest::shiftRows()
     shiftRows_();
 }
 
+void AESTest::invShiftRows()
+{
+    invShiftRows_();
+}
+
 void AESTest::mixColumns()
 {
     mixColumns_();

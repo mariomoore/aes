@@ -99,6 +99,7 @@ protected:
     void addRoundKey_(uint8_t *key);
     void subBytes_();
     void shiftRows_();
+    void invShiftRows_();
     void mixColumns_();
     std::vector<uint8_t> state2vec_();
 };
