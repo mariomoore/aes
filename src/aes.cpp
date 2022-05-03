@@ -159,6 +159,17 @@ void AES::subBytes_()
     }
 }
 
+void AES::invSubBytes_()
+{
+    for (std::size_t r = 0; r < 4; ++r)
+    {
+        for (std::size_t c = 0; c < Nb; ++c)
+        {
+            state[r][c] = invsbox[state[r][c]];
+        }
+    }
+}
+
 void AES::shiftRows_()
 {
     for (std::size_t r = 1; r < 4; ++r)

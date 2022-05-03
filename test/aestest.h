@@ -12,6 +12,7 @@ public:
     void keyExpansion(std::vector<uint8_t> key);
     void addRoundKey(uint8_t *key);
     void subBytes();
+    void invSubBytes();
     void shiftRows();
     void invShiftRows();
     void mixColumns();

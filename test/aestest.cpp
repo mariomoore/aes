@@ -33,6 +33,11 @@ void AESTest::subBytes()
     subBytes_();
 }
 
+void AESTest::invSubBytes()
+{
+    invSubBytes_();
+}
+
 void AESTest::shiftRows()
 {
     shiftRows_();
