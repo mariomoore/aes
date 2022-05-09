@@ -5,6 +5,36 @@
 
 enum CipherKey_t { AES_128 = 4, AES_192 = 6, AES_256 = 8 };
 
+class AES
+{
+public:
+    AES(CipherKey_t ck);
+    ~AES();
+    std::vector<uint8_t> cipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
+    std::vector<uint8_t> invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
+
+private:
+    const uint32_t Nb = 4;  // Number of columns
+    uint32_t Nk;            // Number of 32-bit words comprising the Cipher Key
+    uint32_t Nr;            // Number of rounds
+
+// protected declarations that are used in tests
+protected:
+    uint8_t **state;
+    uint8_t *keySchedule;
+    void keyExpansion_(std::vector<uint8_t> key);
+    void rotWord_(uint8_t *w);
+    void subWord_(uint8_t *w);
+    void addRoundKey_(uint8_t *key);
+    void subBytes_();
+    void invSubBytes_();
+    void shiftRows_();
+    void invShiftRows_();
+    void mixColumns_();
+    void invMixColumns_();
+    std::vector<uint8_t> state2vec_();
+};
+
 static const uint8_t sbox[] =
 {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
@@ -181,35 +211,4 @@ static const uint8_t multiply14[] =
     0x0c,0x02,0x10,0x1e,0x34,0x3a,0x28,0x26,0x7c,0x72,0x60,0x6e,0x44,0x4a,0x58,0x56,
     0x37,0x39,0x2b,0x25,0x0f,0x01,0x13,0x1d,0x47,0x49,0x5b,0x55,0x7f,0x71,0x63,0x6d,
     0xd7,0xd9,0xcb,0xc5,0xef,0xe1,0xf3,0xfd,0xa7,0xa9,0xbb,0xb5,0x9f,0x91,0x83,0x8d
-};
-
-class AES
-{
-public:
-    AES(CipherKey_t ck);
-    ~AES();
-    std::vector<uint8_t> cipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
-    std::vector<uint8_t> invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
-    void printState4debug() const;
-
-private:
-    const uint32_t Nb = 4;  // Number of columns
-    uint32_t Nk;            // Number of 32-bit words comprising the Cipher Key
-    uint32_t Nr;            // Number of rounds
-
-// protected declarations that are used in tests
-protected:
-    uint8_t **state;
-    uint8_t *keySchedule;
-    void keyExpansion_(std::vector<uint8_t> key);
-    void rotWord_(uint8_t *w);
-    void subWord_(uint8_t *w);
-    void addRoundKey_(uint8_t *key);
-    void subBytes_();
-    void invSubBytes_();
-    void shiftRows_();
-    void invShiftRows_();
-    void mixColumns_();
-    void invMixColumns_();
-    std::vector<uint8_t> state2vec_();
 };

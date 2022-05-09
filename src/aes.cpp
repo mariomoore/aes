@@ -1,23 +1,6 @@
 #include "aes.h"
 
 #include <cstddef> // size_t
-#include <iomanip> // hex, setw, setfill
-#include <iostream>
-#include <sstream>
-#include <string>
-
-void printKey4debug(uint8_t *key)
-{
-    const uint32_t Nb = 4;  // Number of columns
-    std::stringstream sstr;
-    std::string str = "";
-    for (std::size_t i = 0; i < 4 * Nb; ++i)
-    {
-        sstr << std::setw(2) << std::setfill ('0') << std::hex << (int)key[i];
-    }
-    str = sstr.str();
-    std::cout << str << std::endl;
-}
 
 AES::AES(CipherKey_t ck)
 {
@@ -97,21 +80,6 @@ std::vector<uint8_t> AES::invCipher(std::vector<uint8_t> in, std::vector<uint8_t
     addRoundKey_(keySchedule);
 
     return state2vec_();
-}
-
-void AES::printState4debug() const
-{
-    std::stringstream sstr;
-    std::string str = "";
-    for (std::size_t c = 0; c < Nb; ++c)
-    {
-        for (std::size_t r = 0; r < 4; ++r)
-        {
-            sstr << std::setw(2) << std::setfill ('0') << std::hex << (int)state[r][c];
-        }
-    }
-    str = sstr.str();
-    std::cout << str << std::endl;
 }
 
 void AES::keyExpansion_(std::vector<uint8_t> key)
