@@ -53,11 +53,16 @@ void AESTest::mixColumns()
     mixColumns_();
 }
 
+void AESTest::invMixColumns()
+{
+    invMixColumns_();
+}
+
 void AESTest::setState(std::vector<uint8_t> inp)
 {
     for (std::size_t r = 0; r < 4; ++r)
     {
-        for (std::size_t c = 0; c < 4; ++c) // c < Nb
+        for (std::size_t c = 0; c < Nb; ++c)
         {
             state[r][c] = inp[r + 4 * c];
         }

@@ -70,6 +70,35 @@ std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> k
     return state2vec_();
 }
 
+std::vector<uint8_t> AES::invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key)
+{
+    for (std::size_t r = 0; r < 4; ++r)
+    {
+        for (std::size_t c = 0; c < Nb; ++c)
+        {
+            state[r][c] = in[r + 4 * c];
+        }
+    }
+
+    keyExpansion_(key);
+
+    std::size_t round = Nr;
+    addRoundKey_(keySchedule + 4 * round * Nb);
+    round--;
+    for (; round > 0; --round)
+    {
+        invShiftRows_();
+        invSubBytes_();
+        addRoundKey_(keySchedule + 4 * round * Nb);
+        invMixColumns_();
+    }
+    invShiftRows_();
+    invSubBytes_();
+    addRoundKey_(keySchedule);
+
+    return state2vec_();
+}
+
 void AES::printState4debug() const
 {
     std::stringstream sstr;
@@ -216,6 +245,31 @@ void AES::mixColumns_()
                     case 1: tmp_col[r] ^= state[i][c]; break;
                     case 2: tmp_col[r] ^= multiply2[state[i][c]]; break;
                     case 3: tmp_col[r] ^= multiply3[state[i][c]]; break;
+                }
+            }
+        }
+        for (std::size_t r = 0; r < 4; ++r)
+        {
+            state[r][c] = tmp_col[r];
+        }
+    }
+}
+
+void AES::invMixColumns_()
+{
+    for (std::size_t c = 0; c < Nb; ++c)
+    {
+        uint8_t tmp_col[4] = {};
+        for (std::size_t r = 0; r < 4; ++r)
+        {
+            for (std::size_t i = 0; i < 4; ++i)
+            {
+                switch(invmixcoeff[r][i])
+                {
+                    case 9: tmp_col[r] ^= multiply9[state[i][c]]; break;
+                    case 11: tmp_col[r] ^= multiply11[state[i][c]]; break;
+                    case 13: tmp_col[r] ^= multiply13[state[i][c]]; break;
+                    case 14: tmp_col[r] ^= multiply14[state[i][c]]; break;
                 }
             }
         }

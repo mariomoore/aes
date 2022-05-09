@@ -16,6 +16,7 @@ public:
     void shiftRows();
     void invShiftRows();
     void mixColumns();
+    void invMixColumns();
 // Help
     void setState(std::vector<uint8_t> inp);
     std::vector<uint8_t> state2vec();

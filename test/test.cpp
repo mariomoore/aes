@@ -306,7 +306,36 @@ void test_aes_mixColumns_should_mixColumns(void)
     TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
 }
 
-void test_aes128_cipher_should_cipherMessage(void)
+void test_aes_invMixColumns_should_mixColumns(void)
+{
+    AESTest aestest(AES_128);
+
+    std::vector<uint8_t> inp = { 0xc6, 0x2f, 0xe1, 0x09, 0xf7, 0x5e, 0xed, 0xc3, 0xcc, 0x79, 0x39, 0x5d, 0x84, 0xf9, 0xcf, 0x5d }; // round[ 4].is_row
+    std::vector<uint8_t> exp = { 0x9a, 0x39, 0xbf, 0x1d, 0x05, 0xb2, 0x0a, 0x3a, 0x47, 0x6a, 0x0b, 0xf7, 0x9f, 0xe5, 0x11, 0x84 }; // round[ 4].im_col
+    aestest.setState(inp);
+
+    aestest.invMixColumns();
+    std::vector<uint8_t> out = aestest.state2vec();
+
+    TEST_ASSERT_EQUAL_HEX8(exp[0], out[0]);
+    TEST_ASSERT_EQUAL_HEX8(exp[1], out[1]);
+    TEST_ASSERT_EQUAL_HEX8(exp[2], out[2]);
+    TEST_ASSERT_EQUAL_HEX8(exp[3], out[3]);
+    TEST_ASSERT_EQUAL_HEX8(exp[4], out[4]);
+    TEST_ASSERT_EQUAL_HEX8(exp[5], out[5]);
+    TEST_ASSERT_EQUAL_HEX8(exp[6], out[6]);
+    TEST_ASSERT_EQUAL_HEX8(exp[7], out[7]);
+    TEST_ASSERT_EQUAL_HEX8(exp[8], out[8]);
+    TEST_ASSERT_EQUAL_HEX8(exp[9], out[9]);
+    TEST_ASSERT_EQUAL_HEX8(exp[10], out[10]);
+    TEST_ASSERT_EQUAL_HEX8(exp[11], out[11]);
+    TEST_ASSERT_EQUAL_HEX8(exp[12], out[12]);
+    TEST_ASSERT_EQUAL_HEX8(exp[13], out[13]);
+    TEST_ASSERT_EQUAL_HEX8(exp[14], out[14]);
+    TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
+}
+
+void test_aes128_cipher_should_encryptMessage(void)
 {
     AES aes(AES_128);
 
@@ -334,7 +363,7 @@ void test_aes128_cipher_should_cipherMessage(void)
     TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
 }
 
-void test_aes192_cipher_should_cipherMessage(void)
+void test_aes192_cipher_should_encryptMessage(void)
 {
     AES aes(AES_192);
 
@@ -363,7 +392,7 @@ void test_aes192_cipher_should_cipherMessage(void)
     TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
 }
 
-void test_aes256_cipher_should_cipherMessage(void)
+void test_aes256_cipher_should_encryptMessage(void)
 {
     AES aes(AES_256);
 
@@ -373,6 +402,92 @@ void test_aes256_cipher_should_cipherMessage(void)
     std::vector<uint8_t> exp = { 0x8e, 0xa2, 0xb7, 0xca, 0x51, 0x67, 0x45, 0xbf, 0xea, 0xfc, 0x49, 0x90, 0x4b, 0x49, 0x60, 0x89 }; // round[14].output
     
     std::vector<uint8_t> out = aes.cipher(inp, key);
+
+    TEST_ASSERT_EQUAL_HEX8(exp[0], out[0]);
+    TEST_ASSERT_EQUAL_HEX8(exp[1], out[1]);
+    TEST_ASSERT_EQUAL_HEX8(exp[2], out[2]);
+    TEST_ASSERT_EQUAL_HEX8(exp[3], out[3]);
+    TEST_ASSERT_EQUAL_HEX8(exp[4], out[4]);
+    TEST_ASSERT_EQUAL_HEX8(exp[5], out[5]);
+    TEST_ASSERT_EQUAL_HEX8(exp[6], out[6]);
+    TEST_ASSERT_EQUAL_HEX8(exp[7], out[7]);
+    TEST_ASSERT_EQUAL_HEX8(exp[8], out[8]);
+    TEST_ASSERT_EQUAL_HEX8(exp[9], out[9]);
+    TEST_ASSERT_EQUAL_HEX8(exp[10], out[10]);
+    TEST_ASSERT_EQUAL_HEX8(exp[11], out[11]);
+    TEST_ASSERT_EQUAL_HEX8(exp[12], out[12]);
+    TEST_ASSERT_EQUAL_HEX8(exp[13], out[13]);
+    TEST_ASSERT_EQUAL_HEX8(exp[14], out[14]);
+    TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
+}
+
+void test_aes128_invCipher_should_decryptMessage(void)
+{
+    AES aes(AES_128);
+
+    std::vector<uint8_t> inp = { 0x69, 0xc4, 0xe0, 0xd8, 0x6a, 0x7b, 0x04, 0x30, 0xd8, 0xcd, 0xb7, 0x80, 0x70, 0xb4, 0xc5, 0x5a }; // round[ 0].iinput
+    std::vector<uint8_t> key = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+    std::vector<uint8_t> exp = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff }; // round[10].ioutput
+    
+    std::vector<uint8_t> out = aes.invCipher(inp, key);
+
+    TEST_ASSERT_EQUAL_HEX8(exp[0], out[0]);
+    TEST_ASSERT_EQUAL_HEX8(exp[1], out[1]);
+    TEST_ASSERT_EQUAL_HEX8(exp[2], out[2]);
+    TEST_ASSERT_EQUAL_HEX8(exp[3], out[3]);
+    TEST_ASSERT_EQUAL_HEX8(exp[4], out[4]);
+    TEST_ASSERT_EQUAL_HEX8(exp[5], out[5]);
+    TEST_ASSERT_EQUAL_HEX8(exp[6], out[6]);
+    TEST_ASSERT_EQUAL_HEX8(exp[7], out[7]);
+    TEST_ASSERT_EQUAL_HEX8(exp[8], out[8]);
+    TEST_ASSERT_EQUAL_HEX8(exp[9], out[9]);
+    TEST_ASSERT_EQUAL_HEX8(exp[10], out[10]);
+    TEST_ASSERT_EQUAL_HEX8(exp[11], out[11]);
+    TEST_ASSERT_EQUAL_HEX8(exp[12], out[12]);
+    TEST_ASSERT_EQUAL_HEX8(exp[13], out[13]);
+    TEST_ASSERT_EQUAL_HEX8(exp[14], out[14]);
+    TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
+}
+
+void test_aes192_invCipher_should_decryptMessage(void)
+{
+    AES aes(AES_192);
+
+    std::vector<uint8_t> inp = { 0xdd, 0xa9, 0x7c, 0xa4, 0x86, 0x4c, 0xdf, 0xe0, 0x6e, 0xaf, 0x70, 0xa0, 0xec, 0x0d, 0x71, 0x91 };
+    std::vector<uint8_t> key = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
+                                 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17 };
+    std::vector<uint8_t> exp = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
+    
+    std::vector<uint8_t> out = aes.invCipher(inp, key);
+
+    TEST_ASSERT_EQUAL_HEX8(exp[0], out[0]);
+    TEST_ASSERT_EQUAL_HEX8(exp[1], out[1]);
+    TEST_ASSERT_EQUAL_HEX8(exp[2], out[2]);
+    TEST_ASSERT_EQUAL_HEX8(exp[3], out[3]);
+    TEST_ASSERT_EQUAL_HEX8(exp[4], out[4]);
+    TEST_ASSERT_EQUAL_HEX8(exp[5], out[5]);
+    TEST_ASSERT_EQUAL_HEX8(exp[6], out[6]);
+    TEST_ASSERT_EQUAL_HEX8(exp[7], out[7]);
+    TEST_ASSERT_EQUAL_HEX8(exp[8], out[8]);
+    TEST_ASSERT_EQUAL_HEX8(exp[9], out[9]);
+    TEST_ASSERT_EQUAL_HEX8(exp[10], out[10]);
+    TEST_ASSERT_EQUAL_HEX8(exp[11], out[11]);
+    TEST_ASSERT_EQUAL_HEX8(exp[12], out[12]);
+    TEST_ASSERT_EQUAL_HEX8(exp[13], out[13]);
+    TEST_ASSERT_EQUAL_HEX8(exp[14], out[14]);
+    TEST_ASSERT_EQUAL_HEX8(exp[15], out[15]);
+}
+
+void test_aes256_invCipher_should_decryptMessage(void)
+{
+    AES aes(AES_256);
+
+    std::vector<uint8_t> inp = { 0x8e, 0xa2, 0xb7, 0xca, 0x51, 0x67, 0x45, 0xbf, 0xea, 0xfc, 0x49, 0x90, 0x4b, 0x49, 0x60, 0x89 };
+    std::vector<uint8_t> key = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
+                                 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f };
+    std::vector<uint8_t> exp = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
+    
+    std::vector<uint8_t> out = aes.invCipher(inp, key);
 
     TEST_ASSERT_EQUAL_HEX8(exp[0], out[0]);
     TEST_ASSERT_EQUAL_HEX8(exp[1], out[1]);
@@ -407,8 +522,12 @@ int main(void)
     RUN_TEST(test_aes_shiftRows_should_shiftRows);
     RUN_TEST(test_aes_invShiftRows_should_shiftRows);
     RUN_TEST(test_aes_mixColumns_should_mixColumns);
-    RUN_TEST(test_aes128_cipher_should_cipherMessage);
-    RUN_TEST(test_aes192_cipher_should_cipherMessage);
-    RUN_TEST(test_aes256_cipher_should_cipherMessage);
+    RUN_TEST(test_aes_invMixColumns_should_mixColumns);
+    RUN_TEST(test_aes128_cipher_should_encryptMessage);
+    RUN_TEST(test_aes192_cipher_should_encryptMessage);
+    RUN_TEST(test_aes256_cipher_should_encryptMessage);
+    RUN_TEST(test_aes128_invCipher_should_decryptMessage);
+    RUN_TEST(test_aes192_invCipher_should_decryptMessage);
+    RUN_TEST(test_aes256_invCipher_should_decryptMessage);
     return UNITY_END();
 }
