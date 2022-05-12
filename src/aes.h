@@ -10,8 +10,8 @@ class AES
 public:
     AES(CipherKey_t ck);
     ~AES();
-    std::vector<uint8_t> cipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
-    std::vector<uint8_t> invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key);
+    std::vector<uint8_t> cipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key);
+    std::vector<uint8_t> invCipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key);
 
 private:
     const uint32_t Nb = 4;  // Number of columns
@@ -22,7 +22,7 @@ private:
 protected:
     uint8_t **state;
     uint8_t *keySchedule;
-    void keyExpansion_(std::vector<uint8_t> key);
+    void keyExpansion_(const std::vector<uint8_t> &key);
     void rotWord_(uint8_t *w);
     void subWord_(uint8_t *w);
     void addRoundKey_(uint8_t *key);

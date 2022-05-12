@@ -1,6 +1,7 @@
 #include "aes.h"
 
-#include <cstddef> // size_t
+#include <cstddef> // size_t, nullptr
+#include <iostream>
 
 AES::AES(CipherKey_t ck)
 {
@@ -24,7 +25,7 @@ AES::~AES()
     delete [] keySchedule;
 }
 
-std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> key)
+std::vector<uint8_t> AES::cipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key)
 {
     for (std::size_t r = 0; r < 4; ++r)
     {
@@ -53,7 +54,7 @@ std::vector<uint8_t> AES::cipher(std::vector<uint8_t> in, std::vector<uint8_t> k
     return state2vec_();
 }
 
-std::vector<uint8_t> AES::invCipher(std::vector<uint8_t> in, std::vector<uint8_t> key)
+std::vector<uint8_t> AES::invCipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key)
 {
     for (std::size_t r = 0; r < 4; ++r)
     {
@@ -82,7 +83,7 @@ std::vector<uint8_t> AES::invCipher(std::vector<uint8_t> in, std::vector<uint8_t
     return state2vec_();
 }
 
-void AES::keyExpansion_(std::vector<uint8_t> key)
+void AES::keyExpansion_(const std::vector<uint8_t> &key)
 {
     std::size_t i = 0;
     for (; i < key.size(); ++i)
@@ -118,6 +119,12 @@ void AES::keyExpansion_(std::vector<uint8_t> key)
 
 void AES::rotWord_(uint8_t *w)
 {
+    if (w == nullptr)
+    {
+        std::cerr << "w is nullptr in rotWord_()\n";
+        return;
+    }
+
     uint8_t tmp = w[0];
     for (std::size_t i = 0; i < 3; ++i)
     {
@@ -128,6 +135,12 @@ void AES::rotWord_(uint8_t *w)
 
 void AES::subWord_(uint8_t *w)
 {
+    if (w == nullptr)
+    {
+        std::cerr << "w is nullptr in subWord_()\n";
+        return;
+    }
+
     for (std::size_t i = 0; i < 4; ++i)
     {
         w[i] = sbox[w[i]];
@@ -136,6 +149,12 @@ void AES::subWord_(uint8_t *w)
 
 void AES::addRoundKey_(uint8_t *key)
 {
+    if (key == nullptr)
+    {
+        std::cerr << "key is nullptr in addRoundKey_()\n";
+        return;
+    }
+    
     for (std::size_t r = 0; r < 4; ++r)
     {
         for (std::size_t c = 0; c < Nb; ++c)

@@ -5,13 +5,13 @@
 
 #include "aes.h"
 
-void printVector(std::vector<uint8_t> vec)
+void printVector(const std::vector<uint8_t> &vec)
 {
     std::stringstream sstr;
     std::string str = "";
-    for (std::size_t i = 0; i < vec.size(); ++i)
+    for (auto &v : vec)
     {
-        sstr << std::setw(2) << std::setfill ('0') << std::hex << (int)vec[i];
+        sstr << std::setw(2) << std::setfill ('0') << std::hex << (int)v;
     }
     str = sstr.str();
     std::cout << str;
