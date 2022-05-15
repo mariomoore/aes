@@ -31,7 +31,8 @@ int main()
     std::cout << "\nAES 128 Encryption";
     std::cout << "\nInput:\t\t"; printVector(inp);
     std::cout << "\nKey:\t\t"; printVector(key128);
-    std::cout << "\nEncrypted:\t"; printVector(out); std::cout << std::endl;
+    std::cout << "\nEncrypted:\t"; printVector(out);
+    std::cout << "\n(Expected):\t" << "69c4e0d86a7b0430d8cdb78070b4c55a" << std::endl;
 
     AES aes192(AES_192);
     std::vector<uint8_t> key192 = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -41,7 +42,8 @@ int main()
     std::cout << "\nAES 192 Encryption";
     std::cout << "\nInput:\t\t"; printVector(inp);
     std::cout << "\nKey:\t\t"; printVector(key192);
-    std::cout << "\nEncrypted:\t"; printVector(out); std::cout << std::endl;
+    std::cout << "\nEncrypted:\t"; printVector(out);
+    std::cout << "\n(Expected):\t" << "dda97ca4864cdfe06eaf70a0ec0d7191" << std::endl;
 
     AES aes256(AES_256);
     std::vector<uint8_t> key256 = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -52,7 +54,8 @@ int main()
     std::cout << "\nAES 256 Encryption";
     std::cout << "\nInput:\t\t"; printVector(inp);
     std::cout << "\nKey:\t\t"; printVector(key256);
-    std::cout << "\nEncrypted:\t"; printVector(out); std::cout << std::endl;
+    std::cout << "\nEncrypted:\t"; printVector(out);
+    std::cout << "\n(Expected):\t" << "8ea2b7ca516745bfeafc49904b496089" << std::endl;
     
     inp = { 0x39, 0x25, 0x84, 0x1d, 0x02, 0xdc, 0x09, 0xfb,
             0xdc, 0x11, 0x85, 0x97, 0x19, 0x6a, 0x0b, 0x32 };
@@ -62,21 +65,24 @@ int main()
     std::cout << "\nAES 128 Decryption";
     std::cout << "\nInput:\t\t"; printVector(inp);
     std::cout << "\nKey:\t\t"; printVector(key128);
-    std::cout << "\nDecrypted:\t"; printVector(out); std::cout << std::endl;
+    std::cout << "\nDecrypted:\t"; printVector(out);
+    std::cout << "\n(Expected):\t" << "3243f6a8885a308d313198a2e0370734" << std::endl;
 
     inp = { 0xdd, 0xa9, 0x7c, 0xa4, 0x86, 0x4c, 0xdf, 0xe0, 0x6e, 0xaf, 0x70, 0xa0, 0xec, 0x0d, 0x71, 0x91 };
     out = aes192.invCipher(inp, key192);
     std::cout << "\nAES 192 Decryption";
     std::cout << "\nInput:\t\t"; printVector(inp);
     std::cout << "\nKey:\t\t"; printVector(key192);
-    std::cout << "\nDecrypted:\t"; printVector(out); std::cout << std::endl;
+    std::cout << "\nDecrypted:\t"; printVector(out);
+    std::cout << "\n(Expected):\t" << "00112233445566778899aabbccddeeff" << std::endl;
 
     inp = { 0x8e, 0xa2, 0xb7, 0xca, 0x51, 0x67, 0x45, 0xbf, 0xea, 0xfc, 0x49, 0x90, 0x4b, 0x49, 0x60, 0x89 };
     out = aes256.invCipher(inp, key256);
     std::cout << "\nAES 256 Decryption";
     std::cout << "\nInput:\t\t"; printVector(inp);
     std::cout << "\nKey:\t\t"; printVector(key256);
-    std::cout << "\nDecrypted:\t"; printVector(out); std::cout << std::endl;
+    std::cout << "\nDecrypted:\t"; printVector(out);
+    std::cout << "\n(Expected):\t" << "00112233445566778899aabbccddeeff" << std::endl;
 
     return 0;
 }

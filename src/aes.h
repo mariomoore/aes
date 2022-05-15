@@ -1,6 +1,8 @@
 #pragma once
 
+#include <cstddef> // size_t, nullptr
 #include <cstdint> // uintX_t
+#include <memory> // unique_ptr
 #include <vector>
 
 enum CipherKey_t { AES_128 = 4, AES_192 = 6, AES_256 = 8 };
@@ -21,11 +23,12 @@ private:
 // protected declarations that are used in tests
 protected:
     uint8_t **state;
-    uint8_t *keySchedule;
+    // uint8_t *keySchedule;
+    std::unique_ptr<uint8_t[]> keySchedule;
     void keyExpansion_(const std::vector<uint8_t> &key);
     void rotWord_(uint8_t *w);
     void subWord_(uint8_t *w);
-    void addRoundKey_(uint8_t *key);
+    void addRoundKey_(std::size_t start = 0);
     void subBytes_();
     void invSubBytes_();
     void shiftRows_();

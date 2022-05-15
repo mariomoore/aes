@@ -23,9 +23,9 @@ void AESTest::keyExpansion(std::vector<uint8_t> key)
     keyExpansion_(key);
 }
 
-void AESTest::addRoundKey(uint8_t *key)
+void AESTest::addRoundKey(uint8_t start /* = 0 */)
 {
-    addRoundKey_(key);
+    addRoundKey_(start);
 }
 
 void AESTest::subBytes()
@@ -66,6 +66,14 @@ void AESTest::setState(std::vector<uint8_t> inp)
         {
             state[r][c] = inp[r + 4 * c];
         }
+    }
+}
+
+void AESTest::setKeySchedule(const uint8_t *key)
+{
+    for (std::size_t i = 0; i < 16; ++i)
+    {
+        keySchedule[i] = key[i];
     }
 }
 

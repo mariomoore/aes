@@ -10,7 +10,7 @@ public:
     void rotWord(uint8_t *w);
     void subWord(uint8_t *w);
     void keyExpansion(std::vector<uint8_t> key);
-    void addRoundKey(uint8_t *key);
+    void addRoundKey(uint8_t start = 0);
     void subBytes();
     void invSubBytes();
     void shiftRows();
@@ -19,6 +19,7 @@ public:
     void invMixColumns();
 // Help
     void setState(std::vector<uint8_t> inp);
+    void setKeySchedule(const uint8_t *key);
     std::vector<uint8_t> state2vec();
     std::vector<uint8_t> keySchedule2vec();
 

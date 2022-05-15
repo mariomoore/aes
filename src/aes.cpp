@@ -1,6 +1,5 @@
 #include "aes.h"
 
-#include <cstddef> // size_t, nullptr
 #include <iostream>
 
 AES::AES(CipherKey_t ck)
@@ -12,7 +11,7 @@ AES::AES(CipherKey_t ck)
     {
         state[i] = new uint8_t[Nb];
     }
-    keySchedule = new uint8_t[4 * Nb * (Nr + 1)];
+    keySchedule = std::unique_ptr<uint8_t[]>(new uint8_t[4 * Nb * (Nr + 1)]);
 }
 
 AES::~AES()
@@ -22,7 +21,6 @@ AES::~AES()
         delete [] state[i];
     }
     delete [] state;
-    delete [] keySchedule;
 }
 
 std::vector<uint8_t> AES::cipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key)
@@ -38,18 +36,18 @@ std::vector<uint8_t> AES::cipher(const std::vector<uint8_t> &in, const std::vect
     keyExpansion_(key);
 
     std::size_t round = 0;
-    addRoundKey_(keySchedule);
+    addRoundKey_();
     round++;
     for (; round < Nr; ++round)
     {
         subBytes_();
         shiftRows_();
         mixColumns_();
-        addRoundKey_(keySchedule + 4 * round * Nb);
+        addRoundKey_(4 * round * Nb);
     }
     subBytes_();
     shiftRows_();
-    addRoundKey_(keySchedule + 4 * round * Nb);
+    addRoundKey_(4 * Nr * Nb);
 
     return state2vec_();
 }
@@ -67,18 +65,18 @@ std::vector<uint8_t> AES::invCipher(const std::vector<uint8_t> &in, const std::v
     keyExpansion_(key);
 
     std::size_t round = Nr;
-    addRoundKey_(keySchedule + 4 * round * Nb);
+    addRoundKey_(4 * round * Nb);
     round--;
     for (; round > 0; --round)
     {
         invShiftRows_();
         invSubBytes_();
-        addRoundKey_(keySchedule + 4 * round * Nb);
+        addRoundKey_(4 * round * Nb);
         invMixColumns_();
     }
     invShiftRows_();
     invSubBytes_();
-    addRoundKey_(keySchedule);
+    addRoundKey_();
 
     return state2vec_();
 }
@@ -147,19 +145,13 @@ void AES::subWord_(uint8_t *w)
     }
 }
 
-void AES::addRoundKey_(uint8_t *key)
+void AES::addRoundKey_(std::size_t start /* = 0 */)
 {
-    if (key == nullptr)
-    {
-        std::cerr << "key is nullptr in addRoundKey_()\n";
-        return;
-    }
-    
     for (std::size_t r = 0; r < 4; ++r)
     {
         for (std::size_t c = 0; c < Nb; ++c)
         {
-            state[r][c] ^= key[r + 4 * c];
+            state[r][c] ^= keySchedule[start + r + 4 * c];
         }
     }
 }
