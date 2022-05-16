@@ -11,7 +11,6 @@ class AES
 {
 public:
     AES(CipherKey_t ck);
-    ~AES();
     std::vector<uint8_t> cipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key);
     std::vector<uint8_t> invCipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key);
 
@@ -22,8 +21,7 @@ private:
 
 // protected declarations that are used in tests
 protected:
-    uint8_t **state;
-    // uint8_t *keySchedule;
+    std::unique_ptr<std::unique_ptr<uint8_t[]>[]> state;
     std::unique_ptr<uint8_t[]> keySchedule;
     void keyExpansion_(const std::vector<uint8_t> &key);
     void rotWord_(uint8_t *w);

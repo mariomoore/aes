@@ -6,21 +6,12 @@ AES::AES(CipherKey_t ck)
 {
     Nk = ck;
     Nr = 6 + ck;
-    state = new uint8_t*[4];
+    state = std::unique_ptr<std::unique_ptr<uint8_t[]>[]>(new std::unique_ptr<uint8_t[]>[4]);
     for (std::size_t i = 0; i < 4; ++i)
     {
-        state[i] = new uint8_t[Nb];
+        state[i] = std::unique_ptr<uint8_t[]>(new uint8_t[Nb]);
     }
     keySchedule = std::unique_ptr<uint8_t[]>(new uint8_t[4 * Nb * (Nr + 1)]);
-}
-
-AES::~AES()
-{
-    for (std::size_t i = 0; i < 4; ++i)
-    {
-        delete [] state[i];
-    }
-    delete [] state;
 }
 
 std::vector<uint8_t> AES::cipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key)
