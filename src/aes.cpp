@@ -1,6 +1,7 @@
 #include "aes.h"
 
 #include <iostream>
+#include <stdexcept> // throw
 
 AES::AES(CipherKey_t ck)
 {
@@ -16,6 +17,11 @@ AES::AES(CipherKey_t ck)
 
 std::vector<uint8_t> AES::cipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key)
 {
+    if (in.size() != 16)
+    {
+        throw std::length_error("Input vector is not 16 bytes length.");
+    }
+
     for (std::size_t r = 0; r < 4; ++r)
     {
         for (std::size_t c = 0; c < Nb; ++c)
@@ -45,6 +51,11 @@ std::vector<uint8_t> AES::cipher(const std::vector<uint8_t> &in, const std::vect
 
 std::vector<uint8_t> AES::invCipher(const std::vector<uint8_t> &in, const std::vector<uint8_t> &key)
 {
+    if (in.size() != 16)
+    {
+        throw std::length_error("Input vector is not 16 bytes length.");
+    }
+
     for (std::size_t r = 0; r < 4; ++r)
     {
         for (std::size_t c = 0; c < Nb; ++c)
@@ -74,6 +85,11 @@ std::vector<uint8_t> AES::invCipher(const std::vector<uint8_t> &in, const std::v
 
 void AES::keyExpansion_(const std::vector<uint8_t> &key)
 {
+    if (key.size() != (Nk * 4))
+    {
+        throw std::length_error("Key length is not valid.");
+    }
+
     std::size_t i = 0;
     for (; i < key.size(); ++i)
     {
