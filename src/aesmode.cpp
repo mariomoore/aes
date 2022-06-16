@@ -21,19 +21,19 @@ std::vector<uint8_t> AESMode::encrypt(const std::vector<uint8_t> &inp, const std
     }
 }
 
-// std::vector<uint8_t> AESMode::decrypt(const std::vector<uint8_t> &inp, const std::vector<uint8_t> &key)
-// {
-//     switch(mode)
-//     {
-//         case ECB: return ECBDecrypt_(inp, key);
-//         case CBC: return CBCDecrypt_(inp, key);
-//         case OFB: return OFBDecrypt_(inp, key);
-//         case CFB: return CFBDecrypt_(inp, key);
-//         default:
-//             std::cerr << "Mode unknown!\n";
-//             return inp;
-//     }
-// }
+std::vector<uint8_t> AESMode::decrypt(const std::vector<uint8_t> &inp, const std::vector<uint8_t> &key)
+{
+    switch(mode)
+    {
+        case ECB: return ECBDecrypt_(inp, key);
+        // case CBC: return CBCDecrypt_(inp, key);
+        // case OFB: return OFBDecrypt_(inp, key);
+        // case CFB: return CFBDecrypt_(inp, key);
+        default:
+            std::cerr << "Mode unknown!\n";
+            return inp;
+    }
+}
 
 void AESMode::setMode(AES_Mode_t am)
 {
@@ -84,4 +84,39 @@ std::vector<uint8_t> AESMode::ECBEncrypt_(const std::vector<uint8_t> &inp, const
     }
 
     return encrypted;
+}
+
+std::vector<uint8_t> AESMode::ECBDecrypt_(const std::vector<uint8_t> &inp, const std::vector<uint8_t> &key)
+{
+    std::vector<uint8_t> decrypted = {};
+    
+    try
+    {
+        AES aes(recognize_key_length_(key));
+
+        size_t i = 0;
+        for (; i < inp.size()/16; ++i)
+        {
+            std::vector<uint8_t> sub_inp = { inp.begin()+(i*16), inp.begin()+(i*16)+16 };
+            std::vector<uint8_t> temp = aes.invCipher(sub_inp, key);
+            decrypted.insert(end(decrypted), begin(temp), end(temp));
+        }
+        if (inp.size() > i*16)
+        {
+            std::vector<uint8_t> sub_inp = { inp.begin()+(i*16), inp.end() };
+            sub_inp.push_back(0x80); // b10000000
+            while (sub_inp.size() <= 16)
+            {
+                sub_inp.push_back(0x00);
+            }
+            std::vector<uint8_t> temp = aes.invCipher(sub_inp, key);
+            decrypted.insert(end(decrypted), begin(temp), end(temp));
+        }
+    }
+    catch(const std::length_error& le)
+    {
+        std::cerr << "Exception: " << le.what() << '\n';
+    }
+
+    return decrypted;
 }
