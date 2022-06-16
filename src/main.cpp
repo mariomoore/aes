@@ -4,6 +4,7 @@
 #include <string>
 
 #include "aes.h"
+#include "aesmode.h"
 
 void printVector(const std::vector<uint8_t> &vec)
 {
@@ -21,118 +22,22 @@ int main()
 {
     std::cout << "Aplikacja pokazowa modułu AES\n\n";
 
-    std::vector<uint8_t> inp = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
-                                 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
+    std::vector<uint8_t> inp = {
+        0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+        0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+        0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+        0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+    };
 
-    std::vector<uint8_t> out = {};
+    std::vector<uint8_t>key128 = { 0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+                                   0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c };
 
-    AES aes128(AES_128);
-    std::vector<uint8_t> key128 = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                                    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+    std::cout << "Tryb ECB\n";
 
-    std::cout << "AES 128 Encryption\n";
-    try
-    {
-        out = aes128.cipher(inp, key128);
-        std::cout << "Input:\t\t"; printVector(inp);
-        std::cout << "Key:\t\t"; printVector(key128);
-        std::cout << "Encrypted:\t"; printVector(out);
-        std::cout << "(Expected):\t" << "69c4e0d86a7b0430d8cdb78070b4c55a\n";
-    }
-    catch(const std::length_error& le)
-    {
-        std::cerr << le.what() << '\n';
-    }
-
-    AES aes192(AES_192);
-    std::vector<uint8_t> key192 = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                                    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-                                    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17 };
-
-    std::cout << "\nAES 192 Encryption\n";
-    try
-    {
-        out = aes192.cipher(inp, key192);
-        std::cout << "Input:\t\t"; printVector(inp);
-        std::cout << "Key:\t\t"; printVector(key192);
-        std::cout << "Encrypted:\t"; printVector(out);
-        std::cout << "(Expected):\t" << "dda97ca4864cdfe06eaf70a0ec0d7191\n";
-    }
-    catch(const std::length_error& le)
-    {
-        std::cerr << le.what() << '\n';
-    }
-
-    AES aes256(AES_256);
-    std::vector<uint8_t> key256 = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                                    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-                                    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-                                    0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f };
-
-    std::cout << "\nAES 256 Encryption\n";
-    try
-    {
-        out = aes256.cipher(inp, key256);
-        std::cout << "Input:\t\t"; printVector(inp);
-        std::cout << "Key:\t\t"; printVector(key256);
-        std::cout << "Encrypted:\t"; printVector(out);
-        std::cout << "(Expected):\t" << "8ea2b7ca516745bfeafc49904b496089\n";
-    }
-    catch(const std::length_error& le)
-    {
-        std::cerr << le.what() << '\n';
-    }
-
-    inp = { 0x39, 0x25, 0x84, 0x1d, 0x02, 0xdc, 0x09, 0xfb,
-            0xdc, 0x11, 0x85, 0x97, 0x19, 0x6a, 0x0b, 0x32 };
-    key128 = { 0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-               0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c };
-
-    std::cout << "\nAES 128 Decryption\n";
-    try
-    {
-        out = aes128.invCipher(inp, key128);
-        std::cout << "Input:\t\t"; printVector(inp);
-        std::cout << "Key:\t\t"; printVector(key128);
-        std::cout << "Decrypted:\t"; printVector(out);
-        std::cout << "(Expected):\t" << "3243f6a8885a308d313198a2e0370734\n";
-    }
-    catch(const std::length_error& le)
-    {
-        std::cerr << le.what() << '\n';
-    }
-
-    inp = { 0xdd, 0xa9, 0x7c, 0xa4, 0x86, 0x4c, 0xdf, 0xe0, 0x6e, 0xaf, 0x70, 0xa0, 0xec, 0x0d, 0x71, 0x91 };
-
-    std::cout << "\nAES 192 Decryption\n";
-    try
-    {
-        out = aes192.invCipher(inp, key192);
-        std::cout << "Input:\t\t"; printVector(inp);
-        std::cout << "Key:\t\t"; printVector(key192);
-        std::cout << "Decrypted:\t"; printVector(out);
-        std::cout << "(Expected):\t" << "00112233445566778899aabbccddeeff\n";
-    }
-    catch(const std::length_error& le)
-    {
-        std::cerr << le.what() << '\n';
-    }
-
-    inp = { 0x8e, 0xa2, 0xb7, 0xca, 0x51, 0x67, 0x45, 0xbf, 0xea, 0xfc, 0x49, 0x90, 0x4b, 0x49, 0x60, 0x89 };
-
-    std::cout << "\nAES 256 Decryption\n";
-    try
-    {
-        out = aes256.invCipher(inp, key256);
-        std::cout << "Input:\t\t"; printVector(inp);
-        std::cout << "Key:\t\t"; printVector(key256);
-        std::cout << "Decrypted:\t"; printVector(out);
-        std::cout << "(Expected):\t" << "00112233445566778899aabbccddeeff\n";
-    }
-    catch(const std::length_error& le)
-    {
-        std::cerr << le.what() << '\n';
-    }
+    AESMode aesmode(ECB);
+    std::vector<uint8_t> out = aesmode.encrypt(inp, key128);
+    printVector(out);
+    std::cout << "3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4\n";
 
     return 0;
 }

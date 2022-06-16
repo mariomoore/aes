@@ -9,12 +9,16 @@ set(MAIN_FILE
 	
 set(SRC_FILES
 	src/aes.cpp
-	# src/aesmode.cpp
+	src/aesmode.cpp
 )
 
 set(TEST_AES_FILES
 	test/test_aes.cpp
 	test/aestest.cpp
+)
+
+set(TEST_AESMODE_FILES
+	test/test_aesmode.cpp
 )
 
 set(CMAKE_CXX_STANDARD 17)
@@ -41,5 +45,11 @@ if(TARGET_GROUP STREQUAL test)
 	add_executable(aestestapp ${TEST_AES_FILES})
 	target_compile_options(aestestapp PRIVATE ${FLAGS})
 	target_link_libraries(aestestapp Unity aes)
+	
+	add_executable(aesmodetestapp ${TEST_AESMODE_FILES})
+	target_compile_options(aesmodetestapp PRIVATE ${FLAGS})
+	target_link_libraries(aesmodetestapp Unity aes)
+	
 	add_test(aes aestestapp)
+	add_test(aesmode aesmodetestapp)
 endif()
