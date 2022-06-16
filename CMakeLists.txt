@@ -9,10 +9,11 @@ set(MAIN_FILE
 	
 set(SRC_FILES
 	src/aes.cpp
+	# src/aesmode.cpp
 )
 
-set(TEST_FILES
-	test/test.cpp
+set(TEST_AES_FILES
+	test/test_aes.cpp
 	test/aestest.cpp
 )
 
@@ -30,11 +31,15 @@ add_executable(${PROGRAM_NAME} ${MAIN_FILE})
 target_compile_options(${PROGRAM_NAME} PRIVATE ${FLAGS})
 target_link_libraries(${PROGRAM_NAME} aes)
 
-include(CTest)
+if(TARGET_GROUP STREQUAL test)
+	include(CTest)
 
-add_library(Unity STATIC ../Unity/src/unity.c)
-target_include_directories(Unity PUBLIC ../Unity/src)
+	add_library(Unity STATIC ../Unity/src/unity.c)
+	target_compile_options(Unity PRIVATE ${FLAGS})
+	target_include_directories(Unity PUBLIC ../Unity/src)
 
-add_executable(aestestapp ${TEST_FILES})
-target_link_libraries(aestestapp Unity aes)
-add_test(aes_test aestestapp)
+	add_executable(aestestapp ${TEST_AES_FILES})
+	target_compile_options(aestestapp PRIVATE ${FLAGS})
+	target_link_libraries(aestestapp Unity aes)
+	add_test(aes aestestapp)
+endif()
