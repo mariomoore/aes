@@ -15,7 +15,7 @@ std::vector<uint8_t> AESMode::encrypt(const std::vector<uint8_t>& inp, const std
     {
         case ECB: return ECBEncrypt_(inp, key);
         case CBC: return CBCEncrypt_(inp, key);
-        // case OFB: return OFBEncrypt_(inp, key);
+        case OFB: return OFBEncrypt_(inp, key);
         // case CFB: return CFBEncrypt_(inp, key);
         default:
             std::cerr << "Mode unimplemented!\n";
@@ -29,7 +29,7 @@ std::vector<uint8_t> AESMode::decrypt(const std::vector<uint8_t>& inp, const std
     {
         case ECB: return ECBDecrypt_(inp, key);
         case CBC: return CBCDecrypt_(inp, key);
-        // case OFB: return OFBDecrypt_(inp, key);
+        case OFB: return OFBDecrypt_(inp, key);
         // case CFB: return CFBDecrypt_(inp, key);
         default:
             std::cerr << "Mode unimplemented!\n";
@@ -40,7 +40,7 @@ std::vector<uint8_t> AESMode::decrypt(const std::vector<uint8_t>& inp, const std
 void AESMode::setMode(AES_Mode_t am)
 {
     mode = am;
-    if (mode == CBC)
+    if (mode == CBC || mode == OFB)
     {
         setIV(std::vector<uint8_t>(16, 0));
     }
@@ -210,4 +210,48 @@ std::vector<uint8_t> AESMode::CBCDecrypt_(const std::vector<uint8_t>& inp, const
     }
 
     return decrypted;
+}
+
+std::vector<uint8_t> AESMode::OFBEncrypt_(const std::vector<uint8_t>& inp, const std::vector<uint8_t>& key)
+{
+    std::vector<uint8_t> encrypted = {};
+
+    try
+    {
+        AES aes(recognize_key_length_(key));
+        std::vector<uint8_t> input_block = initializationVector;
+
+        size_t i = 0;
+        for (; i < inp.size() / 16; ++i)
+        {
+            std::vector<uint8_t> temp = aes.cipher(input_block, key);
+            input_block = temp;
+            std::vector<uint8_t> sub_inp = { inp.begin() + (i * 16), inp.begin() + (i * 16) + 16 };
+            std::transform(sub_inp.begin(), sub_inp.end(), input_block.begin(), sub_inp.begin(), std::bit_xor<uint8_t>());
+            encrypted.insert(end(encrypted), begin(sub_inp), end(sub_inp));
+        }
+        if (inp.size() > i * 16)
+        {
+            std::vector<uint8_t> input_block = aes.cipher(input_block, key);
+            std::vector<uint8_t> sub_inp = { inp.begin() + (i * 16), inp.end() };
+            sub_inp.push_back(0x80);  // b10000000
+            while (sub_inp.size() <= 16)
+            {
+                sub_inp.push_back(0x00);
+            }
+            std::transform(sub_inp.begin(), sub_inp.end(), input_block.begin(), sub_inp.begin(), std::bit_xor<uint8_t>());
+            encrypted.insert(end(encrypted), begin(sub_inp), end(sub_inp));
+        }
+    }
+    catch (const std::length_error& le)
+    {
+        std::cerr << "Exception: " << le.what() << '\n';
+    }
+
+    return encrypted;
+}
+
+std::vector<uint8_t> AESMode::OFBDecrypt_(const std::vector<uint8_t>& inp, const std::vector<uint8_t>& key)
+{
+    return OFBEncrypt_(inp, key);
 }
